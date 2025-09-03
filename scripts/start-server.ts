@@ -135,7 +135,7 @@ Examples:
     app.post('/mcp', async (req, res) => {
       try {
         // Check for existing session ID
-        const sessionId = req.headers['mcp-session-id'] as string | undefined
+        const sessionId = (req.headers['mcp-session-id'] || req.query.sessionId) as string | undefined
         let transport: StreamableHTTPServerTransport
 
         if (sessionId && transports[sessionId]) {
@@ -192,7 +192,7 @@ Examples:
 
     // Handle GET requests for server-to-client notifications via Streamable HTTP
     app.get('/mcp', async (req, res) => {
-      const sessionId = req.headers['mcp-session-id'] as string | undefined
+      const sessionId = (req.headers['mcp-session-id'] || req.query.sessionId) as string | undefined
       if (!sessionId || !transports[sessionId]) {
         res.status(400).send('Invalid or missing session ID')
         return
@@ -204,7 +204,7 @@ Examples:
 
     // Handle DELETE requests for session termination
     app.delete('/mcp', async (req, res) => {
-      const sessionId = req.headers['mcp-session-id'] as string | undefined
+      const sessionId = (req.headers['mcp-session-id'] || req.query.sessionId) as string | undefined
       if (!sessionId || !transports[sessionId]) {
         res.status(400).send('Invalid or missing session ID')
         return
