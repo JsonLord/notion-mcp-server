@@ -287,6 +287,19 @@ curl -H "Authorization: Bearer your-token-here" \
 
 **Note:** Make sure to set either the `NOTION_TOKEN` environment variable (recommended) or the `OPENAPI_MCP_HEADERS` environment variable with your Notion integration token when using either transport mode.
 
+### Deploying to Hugging Face Spaces
+
+You can deploy this server as a [Hugging Face Space](https://huggingface.co/spaces). Here's how to configure it:
+
+1.  **Create a new Space:** Create a new "Docker" space on Hugging Face. Make sure you are using the existing `Dockerfile` from this repository.
+2.  **Configure Container options:** In your Space settings, under "Container options", set the "Command" to:
+    `--transport http`
+3.  **Configure Environment Variables:** In your Space settings, add the following secrets:
+    *   `NOTION_TOKEN`: Your Notion integration token. This will be used as the authentication token for the server.
+    *   `PORT`: The port your space will run on. Hugging Face Spaces usually sets this to `7860`. The server will automatically use this port.
+
+4.  **Deploy:** With the `Dockerfile` and secrets configured, your Space should build and deploy automatically. The server will be available at your Space's public URL.
+
 ### Examples
 
 1. Using the following instruction

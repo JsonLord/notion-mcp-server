@@ -19,7 +19,7 @@ export async function startServer(args: string[] = process.argv) {
   function parseArgs() {
     const args = process.argv.slice(2);
     let transport = 'stdio'; // default
-    let port = 3000;
+    let port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
     let authToken: string | undefined;
 
     for (let i = 0; i < args.length; i++) {
@@ -77,8 +77,8 @@ Examples:
     app.use(express.json())
 
     // Generate or use provided auth token (from CLI arg or env var)
-    const authToken = options.authToken || process.env.AUTH_TOKEN || randomBytes(32).toString('hex')
-    if (!options.authToken && !process.env.AUTH_TOKEN) {
+    const authToken = options.authToken || process.env.AUTH_TOKEN || process.env.NOTION_TOKEN || randomBytes(32).toString('hex')
+    if (!options.authToken && !process.env.AUTH_TOKEN && !process.env.NOTION_TOKEN) {
       console.log(`Generated auth token: ${authToken}`)
       console.log(`Use this token in the Authorization header: Bearer ${authToken}`)
     }
