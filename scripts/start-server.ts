@@ -148,6 +148,7 @@ Examples:
             onsessioninitialized: (sessionId) => {
               // Store the transport by session ID
               transports[sessionId] = transport
+              res.setHeader('Mcp-Session-Id', sessionId)
             }
           })
 
