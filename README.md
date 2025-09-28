@@ -1,3 +1,9 @@
+---
+title: Notion MCP Server
+sdk: docker
+app_port: 7861
+---
+
 # Notion MCP Server
 
 > [!NOTE] 
