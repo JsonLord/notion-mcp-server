@@ -43,6 +43,7 @@ Options:
   --help, -h             Show this help message
 
 Environment Variables:
+  BEARER                 Bearer token for HTTP transport authentication (priority)
   NOTION_TOKEN           Notion integration token (recommended)
   OPENAPI_MCP_HEADERS    JSON string with Notion API headers (alternative)
   AUTH_TOKEN             Bearer token for HTTP transport authentication (alternative to --auth-token)
@@ -77,8 +78,8 @@ Examples:
     app.use(express.json())
 
     // Generate or use provided auth token (from CLI arg or env var)
-    const authToken = options.authToken || process.env.AUTH_TOKEN || randomBytes(32).toString('hex')
-    if (!options.authToken && !process.env.AUTH_TOKEN) {
+    const authToken = process.env.BEARER || options.authToken || process.env.AUTH_TOKEN || randomBytes(32).toString('hex')
+    if (!process.env.BEARER && !options.authToken && !process.env.AUTH_TOKEN) {
       console.log(`Generated auth token: ${authToken}`)
       console.log(`Use this token in the Authorization header: Bearer ${authToken}`)
     }
