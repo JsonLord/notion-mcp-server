@@ -66,6 +66,14 @@ Examples:
   const options = parseArgs()
   const transport = options.transport
 
+  // HuggingFace Spaces reserves port 7860 for the main application.
+  // If the server is started on this port, it will conflict with the Spaces' own Uvicorn server.
+  // To avoid this, we'll automatically switch to a different port if 7860 is specified.
+  if (options.port === 7860) {
+    console.log(`Port 7860 is reserved. Switching to port 7861.`)
+    options.port = 7861
+  }
+
   if (transport === 'stdio') {
     // Use stdio transport (default)
     const proxy = await initProxy(specPath, baseUrl)
