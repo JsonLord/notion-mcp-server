@@ -14,7 +14,7 @@
     "dev": "tsx watch scripts/start-server.ts"
   },
   "bin": {
-    "notion-mcp-server": "bin/cli.mjs"
+    "notion-mcp-server": "dist/index.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.13.3",

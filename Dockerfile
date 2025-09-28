@@ -10,8 +10,8 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies
-RUN --mount=type=cache,target=/root/.npm npm ci --ignore-scripts --omit-dev
+# Install all dependencies (including dev dependencies for the build)
+RUN --mount=type=cache,target=/root/.npm npm ci --ignore-scripts
 
 # Copy source code
 COPY . .
@@ -19,19 +19,23 @@ COPY . .
 # Build the package
 RUN --mount=type=cache,target=/root/.npm npm run build
 
-# Install package globally
-RUN --mount=type=cache,target=/root/.npm npm link
+# Prune dev dependencies for a smaller final image
+RUN npm prune --production
 
 # Minimal image for runtime
 FROM node:20-slim
 
-# Copy built package from builder stage
-COPY scripts/notion-openapi.json /usr/local/scripts/
-COPY --from=builder /usr/local/lib/node_modules/@notionhq/notion-mcp-server /usr/local/lib/node_modules/@notionhq/notion-mcp-server
-COPY --from=builder /usr/local/bin/notion-mcp-server /usr/local/bin/notion-mcp-server
+WORKDIR /app
+
+# Copy only necessary artifacts from the builder stage
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json .
+COPY --from=builder /app/scripts/notion-openapi.json ./scripts/notion-openapi.json
 
 # Set default environment variables
 ENV OPENAPI_MCP_HEADERS="{}"
 
-# Set entrypoint
-ENTRYPOINT ["notion-mcp-server"]
+# The command that will be run when the container starts.
+# This is also compatible with the HuggingFace deployment which expects `dist/index.js`.
+ENTRYPOINT ["node", "dist/index.js"]

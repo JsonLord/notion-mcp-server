@@ -13,7 +13,7 @@ async function build() {
     platform: 'node',
     target: 'node18',
     format: 'esm',
-    outfile: 'bin/cli.mjs',
+    outfile: 'dist/index.js',
     banner: {
       js: "#!/usr/bin/env node\nimport { createRequire } from 'module';const require = createRequire(import.meta.url);" // see https://github.com/evanw/esbuild/pull/2067
     },
@@ -21,7 +21,7 @@ async function build() {
   });
 
   // Make the output file executable
-  await chmod('./bin/cli.mjs', 0o755);
+  await chmod('./dist/index.js', 0o755);
 }
 
 build().catch((err) => {
